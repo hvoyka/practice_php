@@ -25,10 +25,24 @@ class Router
     {
         //Получить строку запроса
         $uri = $this->getURI();
-        echo $uri;
-        //echo $_SERVER['REQUEST_URI'];
+  
         //Проверить наличие такого запроса в routes.php
-        
+        foreach ($this->routes as $uriPatterns => $path) {
+            //Сравниваем $uriPatterns и $uri
+            if(preg_match("~^$uriPatterns$~", $uri)){
+                // Определить какой контроллер
+                // и action обрабатывает запрос
+                $segments = explode("/", $path);
+                
+                $controllerName = array_shift($segments) . 'Controller';
+                $controllerName = ucfirst($controllerName);
+                
+                $actionName = 'action' . ucfirst(array_shift($segments));
+                echo "<br> Класс: " . $controllerName;
+                echo "<br> Метод: " . $actionName;
+                
+            }
+        }
         // Если есть совпадения, определить какой контроллер 
         // и action обрабатывает запрос
         

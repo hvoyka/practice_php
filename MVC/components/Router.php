@@ -29,7 +29,7 @@ class Router
         //Проверить наличие такого запроса в routes.php
         foreach ($this->routes as $uriPatterns => $path) {
             //Сравниваем $uriPatterns и $uri
-            if(preg_match("~^$uriPatterns$~", $uri)){
+            if(preg_match("~$uriPatterns~", $uri)){
                 // Определить какой контроллер
                 // и action обрабатывает запрос
                 $segments = explode("/", $path);
@@ -37,17 +37,22 @@ class Router
                 $controllerName = array_shift($segments) . 'Controller';
                 $controllerName = ucfirst($controllerName);
                 
-                $actionName = 'action' . ucfirst(array_shift($segments));
-                echo "<br> Класс: " . $controllerName;
-                echo "<br> Метод: " . $actionName;
-                
+                $actionName = 'action'.ucfirst((array_shift($segments)));
+
+                $controllerFile = ROOT . '/controllers/' .$controllerName. '.php';
+                if (file_exists($controllerFile)) {
+                        include_once($controllerFile);
+                }
+
+                $controllerObject = new $controllerName;
+                $result = $controllerObject->$actionName();
+                if ($result != null) {
+                        break;
+                }
             }
+             
         }
-        // Если есть совпадения, определить какой контроллер 
-        // и action обрабатывает запрос
         
-        // Подключить фаил класса-контроллера
-        
-        // Создать объект, вызвать метод (т.е. action)
+       
     }
 }

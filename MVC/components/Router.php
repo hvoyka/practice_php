@@ -29,7 +29,7 @@ class Router
         //Проверить наличие такого запроса в routes.php
         foreach ($this->routes as $uriPatterns => $path) {
             //Сравниваем $uriPatterns и $uri
-            if(preg_match("~$uriPatterns~", $uri)){
+            if(preg_match("~^$uriPatterns$~", $uri)){
                 // Определить какой контроллер
                 // и action обрабатывает запрос
                 $segments = explode("/", $path);

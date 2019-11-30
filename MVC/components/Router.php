@@ -29,7 +29,17 @@ class Router
         //Проверить наличие такого запроса в routes.php
         foreach ($this->routes as $uriPatterns => $path) {
             //Сравниваем $uriPatterns и $uri
-            if(preg_match("~^$uriPatterns$~", $uri)){
+            if(preg_match("~$uriPatterns~", $uri)){
+                
+                echo '<br>Где ищем (запрос, который набрал пользователь): ' . $uri;
+                echo '<br>Что ищем (совпадения из правила): ' . $uriPatterns;
+                echo '<br>Кто обрабатывает: ' . $path;
+                
+                // Получаем внутренний путь из внешнего, согласно правилу
+                $internalRoute = preg_replace("~$uriPatterns~", $path, $uri);
+                
+                echo '<br><br>Нужно сформировать: ' . $internalRoute;
+                
                 // Определить какой контроллер
                 // и action обрабатывает запрос
                 $segments = explode("/", $path);

@@ -29,33 +29,28 @@ class Router
         //Проверить наличие такого запроса в routes.php
         foreach ($this->routes as $uriPatterns => $path) {
             //Сравниваем $uriPatterns и $uri
-            if(preg_match("~$uriPatterns~", $uri)){
-                
-                echo '<br>Где ищем (запрос, который набрал пользователь): ' . $uri;
-                echo '<br>Что ищем (совпадения из правила): ' . $uriPatterns;
-                echo '<br>Кто обрабатывает: ' . $path;
+            if(preg_match("~$uriPatterns~", $uri)){   
                 
                 // Получаем внутренний путь из внешнего, согласно правилу
                 $internalRoute = preg_replace("~$uriPatterns~", $path, $uri);
                 
-                echo '<br><br>Нужно сформировать: ' . $internalRoute;
-                
                 // Определить какой контроллер
                 // и action обрабатывает запрос
-                $segments = explode("/", $path);
+                $segments = explode("/", $internalRoute);
                 
                 $controllerName = array_shift($segments) . 'Controller';
                 $controllerName = ucfirst($controllerName);
                 
                 $actionName = 'action'.ucfirst((array_shift($segments)));
-
+                $parameters = $segments;
+                
                 $controllerFile = ROOT . '/controllers/' .$controllerName. '.php';
                 if (file_exists($controllerFile)) {
                         include_once($controllerFile);
                 }
 
                 $controllerObject = new $controllerName;
-                $result = $controllerObject->$actionName();
+                $result = call_user_func_array(array($controllerObject, $actionName), $parameters);
                 if ($result != null) {
                         break;
                 }

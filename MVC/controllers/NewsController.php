@@ -18,7 +18,10 @@ class NewsController
     
     public function actionView($id)
     {   
-        echo "<br>" . $id;
+        $newsItem = News::getNewsItemById($id);
+        echo '<pre>';
+        print_r($newsItem);
+        echo '<pre>';
         return true;
     }
 }

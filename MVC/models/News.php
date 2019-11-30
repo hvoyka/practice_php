@@ -7,8 +7,20 @@ class News
      * @param enteger $id
      */
     public static function getNewsItemById($id)
-    {
-        
+    {   
+        $id= intval($id);
+        if($id){
+            $host = 'localhost';
+            $dbname = 'mvc_site';
+            $user = 'root';
+            $password = '';
+            $db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+
+            $result = $db->query('SELECT * FROM news WHERE id=' . $id);
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+            $newsItem = $result->fetch();
+            return $newsItem;
+        }
     }
    
     /**
@@ -20,14 +32,11 @@ class News
         $dbname = 'mvc_site';
         $user = 'root';
         $password = '';
-        $db = new PDO("mysql:host=$host; dbname= $dbname", $user, $password);
+        $db = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
         
         $newsList = array();
         
-        $result = $db->query('SELECT id, title, date, short_content '
-                . 'FROM  news'
-                . 'ORDER BY date DESC'
-                . 'LIMIT 10');
+        $result = $db->query('SELECT id, title, date, short_content FROM news ORDER BY date DESC LIMIT 10 ;');
         $i = 0;
         while($row = $result->fetch()) {
             $newsList[$i]['id'] = $row['id'];
